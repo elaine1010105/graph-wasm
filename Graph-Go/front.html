@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+html {
+    box-sizing: border-box;
+}
+
+.grid-container {
+    display: grid;
+    margin: 2em;
+    box-sizing: border-box;
+    grid-template: 1fr 5fr 4fr / repeat(4, 1fr);
+    grid-template-areas: 
+    'title upload header header'
+    'search graph graph graph'
+    'search result result result';
+    gap: 10px;
+    padding: 10px;
+    height: 100%;
+}
+
+.grid-container > div {
+    background-color: #D9F0FF;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 30px;
+}
+
+.title {
+    grid-area: title;
+    color: #7681B3;
+}
+
+.grid-button {
+    grid-area: upload;
+    color: #7681B3;
+}
+
+.grid-graph {
+    grid-area: graph;
+    color: #7681B3;
+}
+
+.grid-search {
+    grid-area: search;
+    color: #7681B3;
+}
+
+.grid-result {
+    grid-area: result;
+    color: #7681B3;
+}
+
+button {
+    border: none;
+    background-color: inherit;
+    outline: none;
+}
+button:hover {
+    transform: rotate(360deg);
+}
+
+</style>
+<title>Page Title</title>
+</head>
+<body style="background-color: aliceblue">
+
+<div class = "grid-container">
+    <div class="title">Graph Go</div>
+    <div class="grid-button">
+        <button type="submit">
+            <img src="assets/button.png">
+        </button>
+    </div>
+    <div class="grid-graph">Graph</div>
+    <div class="grid-search">Search</div>
+    <div class="grid-result">Result</div>
+    
+</div>
+
+</body>
+</html>
