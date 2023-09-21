@@ -1,0 +1,24 @@
+{
+    "name": "0",
+    "parent": "null",
+    "children": [
+        {
+            "name": "1",
+            "parent": "0",
+            "children": [
+            {
+                "name": "2",
+                "parent": "1"
+            },
+            {
+                "name": "3",
+                "parent": "1"
+            }
+            ]
+        },
+        {
+            "name": "4",
+            "parent": "0"
+        }
+    ]
+}
