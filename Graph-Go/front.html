@@ -8,23 +8,24 @@ html {
 
 .grid-container {
     display: grid;
-    margin: 2em;
     box-sizing: border-box;
-    grid-template: 1fr 5fr 4fr / repeat(4, 1fr);
+    grid-template: 1fr 6fr 3fr / repeat(5, 1fr);
     grid-template-areas: 
-    'title upload header header'
-    'search graph graph graph'
-    'search result result result';
+    'title upload header header header'
+    'search graph graph graph graph'
+    'search result result result result';
     gap: 10px;
     padding: 10px;
     height: 90vh;
+    max-width: 100vw;
+    width: 90vw;
 }
 
 .grid-container > div {
     /*background-color: #D9F0FF;*/
-    text-align: center;
-    padding: 20px 0;
-    font-size: 30px;
+    text-align: left;
+    padding: 10px 0;
+    font-size: 20px;
 }
 
 .grid-title {
@@ -35,8 +36,9 @@ html {
 
 .grid-title h1 {
     text-align: justify;
-    font-size: 1.1em;
+    font-size: 1.5em;
     color: #7681B3;
+    margin: 0%;
 }
 
 .grid-button {
@@ -177,17 +179,20 @@ ul.select2-results {
         <h1>Graph Go</h1>
     </div>
     <div class="grid-button">
-        <button onclick="loadScript()" type="submit">
+        <input type="file" id="fileInput" style="display:none;">
+        <button onclick="loadScript()" type="file">
             <img src="assets/button.png">
         </button>
     </div>
-    <div class="grid-graph">
-        <img src = "assets/Graph.png">
+    <div class="grid-graph" id="grid-graph">
+        <!-- <img src = "assets/Graph.png"> -->
     </div>
     <div class="grid-search">
         <table class="search-table">
             <tr>
-                <td>Breadth First Searchs</td>
+                <td>Breadth First Search
+                    <input type = "button" onclick="bfs()"></input>
+                </td>
             </tr>
             <tr>
                 <td>Depth First Search</td>
@@ -205,7 +210,32 @@ ul.select2-results {
     </div>
     <div class="grid-result">Result</div>
     
-</div>
+    <script src = 'app.js'></script>
+    <script>
+        function loadScript() {
+
+            var fileInput = document.getElementById('fileInput');
+            fileInput.click();
+
+            document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+            function handleFileSelect(event) {
+                // Get the selected file(s)
+                var file = event.target.files[0];
+
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    const jsonData = event.target.result;
+                    const parseData = JSON.parse(jsonData);
+                    graphReady(parseData);
+                }
+                reader.readAsText(file);
+            }
+
+            // loadWasm();
+    
+        }
+    </script>
 
 </body>
 </html>

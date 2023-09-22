@@ -1,10 +1,11 @@
+const graphDiv = d3.select('#grid-graph');
 // set the dimensions and margins of the graph
-const margin = {top: 30, right: 30, bottom: 30, left: 80},
-  width = 700 - margin.left - margin.right,
-  height = 800 - margin.top - margin.bottom;
+const margin = {top: 0, right: 0, bottom: 0, left: 0},
+  width = graphDiv.node().clientWidth,
+  height = graphDiv.node().clientHeight;
 
 // append the svg object to the body of the page
-const svg = d3.select("#my_dataviz")
+const svg = d3.select("#grid-graph")
 .append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
@@ -42,7 +43,7 @@ function displayGraph(data) {
         .selectAll("circle")
         .data(data.nodes)
         .join("circle")
-        .attr("r", 20)
+        .attr("r", 16)
         .style("fill", "#123456")
 
 
@@ -86,8 +87,8 @@ function displayGraph(data) {
             .attr("y2", function(d) { return d.target.y; });
 
         node
-            .attr("cx", function (d) { return d.x+6; })
-            .attr("cy", function(d) { return d.y-6; })
+            .attr("cx", function (d) { d.x = Math.max(8, Math.min(width-8, d.x)); return d.x+6; })
+            .attr("cy", function(d) { d.y = Math.max(8, Math.min(width-8, d.y)); return d.y-6;  })
 
 
         label
