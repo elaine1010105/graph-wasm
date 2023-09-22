@@ -17,24 +17,33 @@ html {
     'search result result result';
     gap: 10px;
     padding: 10px;
-    height: 100%;
+    height: 90vh;
 }
 
 .grid-container > div {
-    background-color: #D9F0FF;
+    /*background-color: #D9F0FF;*/
     text-align: center;
     padding: 20px 0;
     font-size: 30px;
 }
 
-.title {
+.grid-title {
     grid-area: title;
+    text-align: center;
+    font-size: 100%;
+}
+
+.grid-title h1 {
+    text-align: justify;
+    font-size: 1.1em;
     color: #7681B3;
 }
 
 .grid-button {
     grid-area: upload;
     color: #7681B3;
+    display: grid;
+    margin: auto;
 }
 
 .grid-graph {
@@ -50,6 +59,20 @@ html {
 .grid-result {
     grid-area: result;
     color: #7681B3;
+    background-color: lightskyblue;
+}
+
+.search-table {
+    border: none;
+    height: 100%;
+    width: 100%;
+}
+
+table.search-table td{
+    border: none;
+}
+table.search-table td:hover{
+    text-decoration: underline;
 }
 
 button {
@@ -61,20 +84,125 @@ button:hover {
     transform: rotate(360deg);
 }
 
+.dropdown_container {
+  width: 10%;
+}
+
+
+
+.selection {
+  width: 50%;
+}
+
+.node {
+  cursor: pointer;
+}
+
+.node circle {
+  fill: steelblue;
+  stroke: rgb(25, 71, 225);
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 10px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: rgb(0, 0, 0);
+  stroke-width: 1.5px;
+}
+
+.found {
+  fill: #36ff39;
+  stroke: #109410;
+}
+
+.searched {
+    fill: #2070ef;
+    stroke: #2070ef;
+}
+
+.search {
+  float: left;
+  font: 10px sans-serif;
+  width: 30%;
+}
+
+ul.select2-results {
+ max-height: 100px;
+}
+
+.select2-container,
+.select2-drop,
+.select2-search,
+.select2-search input {
+  font: 10px sans-serif;
+}
+
+#block_container {
+  display: inline;
+}
+
+.search-block {
+    display: none;
+}
+
+.graph-input {
+    display: none;
+}
+
+#searchTable {
+  display: inline-block;
+}
+
+#searchTable[hidden] {
+  display: none !important;
+}
 </style>
-<title>Page Title</title>
+
+<title>Graph-Go</title>
+
 </head>
-<body style="background-color: aliceblue">
+
+<body style="background-color: white">
+<script src="https://d3js.org/d3.v6.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.min.css"></link>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.min.js"></script>
 
 <div class = "grid-container">
-    <div class="title">Graph Go</div>
+    <div class="grid-title">
+        <h1>Graph Go</h1>
+    </div>
     <div class="grid-button">
-        <button type="submit">
+        <button onclick="loadScript()" type="submit">
             <img src="assets/button.png">
         </button>
     </div>
-    <div class="grid-graph">Graph</div>
-    <div class="grid-search">Search</div>
+    <div class="grid-graph">
+        <img src = "assets/Graph.png">
+    </div>
+    <div class="grid-search">
+        <table class="search-table">
+            <tr>
+                <td>Breadth First Search</td>
+            </tr>
+            <tr>
+                <td>Depth First Search</td>
+            </tr>
+            <tr>
+                <td>Dijkastra Search</td>
+            </tr>
+            <tr>
+                <td>A* Search</td>
+            </tr>
+            <tr>
+                <td>Greedy Search</td>
+            </tr>
+        </table>
+    </div>
     <div class="grid-result">Result</div>
     
 </div>
