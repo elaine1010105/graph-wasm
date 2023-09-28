@@ -14,7 +14,6 @@ html {
     'title upload src target header'
     'search graph graph graph graph'
     'search result result result result';
-    gap: 10px;
     padding: 10px;
     height: 90vh;
     max-width: 100vw;
@@ -24,7 +23,6 @@ html {
 .grid-container > div {
     /*background-color: #D9F0FF;*/
     text-align: left;
-    padding: 10px 0;
     font-size: 20px;
 }
 
@@ -32,6 +30,7 @@ html {
     grid-area: title;
     text-align: center;
     font-size: 100%;
+    border-bottom: 1px solid #7681B3;
 }
 
 .grid-title h1 {
@@ -44,19 +43,26 @@ html {
     grid-area: src;
     text-align: center;
     font-size: 100%;
+    border-bottom: 1px solid #7681B3;
 }
 
 .grid-target {
     grid-area: target;
     text-align: center;
     font-size: 100%;
+    border-bottom: 1px solid #7681B3;
 }
 
 .grid-button {
     grid-area: upload;
     color: #7681B3;
-    display: grid;
-    margin: auto;
+    border-bottom: 1px solid #7681B3;
+}
+
+.grid-header {
+    grid-area: header;
+    color: #7681B3;
+    border-bottom: 1px solid #7681B3;
 }
 
 .grid-graph {
@@ -72,7 +78,8 @@ html {
 .grid-result {
     grid-area: result;
     color: #7681B3;
-    background-color: lightskyblue;
+    background-color: #D9F0FF;
+    border-top:5px solid #7681B3
 }
 
 .grid-src select {
@@ -83,9 +90,17 @@ html {
     height: 40px;
     margin: 0 0 0 25px;
     padding: 10px;
-    width: 100%;
+    width: 60%;
     text-align: center;
+    display: inline-block;
 }
+
+.grid-src p {
+    display: inline-block;
+    color: #7681B3;
+    width: auto;
+}
+
 .grid-target select {
     background: none repeat scroll 0 0 #D9F0FF;
     border: 3px solid #E5E5E5;
@@ -94,8 +109,15 @@ html {
     height: 40px;
     margin: 0 0 0 25px;
     padding: 10px;
-    width: 100%;
+    width: 60%;
     text-align: center;
+    display: inline-block;
+}
+
+.grid-target p {
+    display: inline-block;
+    color: #7681B3;
+    width: auto;
 }
 .search-table {
     border: none;
@@ -226,14 +248,18 @@ ul.select2-results {
         </button>
     </div>
     <div class="grid-src">
+        <p>Source</p>
         <select class="dropdown_container" id="src_container">
-            <!-- <option value ="" disabled selected hidden>Source Vertex</option> -->
+            <option value ="" disabled selected hidden>Source Vertex</option>
         </select>
     </div>
     <div class="grid-target">
+        <p>Target</p>
         <select class="dropdown_container" id="target_container">
-            <!-- <option value ="" disabled selected hidden>Target Vertex</option> -->
+            <option value ="" disabled selected hidden>Target Vertex</option>
         </select>
+    </div>
+    <div class="grid-header">
     </div>
     <div class="grid-graph" id="grid-graph">
         <!-- <img src = "assets/Graph.png"> -->
