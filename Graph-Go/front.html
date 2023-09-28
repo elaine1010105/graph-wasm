@@ -11,7 +11,7 @@ html {
     box-sizing: border-box;
     grid-template: 1fr 6fr 3fr / repeat(5, 1fr);
     grid-template-areas: 
-    'title upload header header header'
+    'title upload src target header'
     'search graph graph graph graph'
     'search result result result result';
     gap: 10px;
@@ -40,6 +40,17 @@ html {
     color: #7681B3;
     margin: 0%;
 }
+.grid-src {
+    grid-area: src;
+    text-align: center;
+    font-size: 100%;
+}
+
+.grid-target {
+    grid-area: target;
+    text-align: center;
+    font-size: 100%;
+}
 
 .grid-button {
     grid-area: upload;
@@ -64,6 +75,28 @@ html {
     background-color: lightskyblue;
 }
 
+.grid-src select {
+    background: none repeat scroll 0 0 #D9F0FF;
+    border: 3px solid #E5E5E5;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 0 15px #bed9eb inset;
+    height: 40px;
+    margin: 0 0 0 25px;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+}
+.grid-target select {
+    background: none repeat scroll 0 0 #D9F0FF;
+    border: 3px solid #E5E5E5;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 0 15px #bed9eb inset;
+    height: 40px;
+    margin: 0 0 0 25px;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+}
 .search-table {
     border: none;
     height: 100%;
@@ -74,6 +107,14 @@ table.search-table td{
     border: none;
 }
 table.search-table td:hover{
+    text-decoration: underline;
+}
+table.search-table button{
+    color: #7681B3;
+    font-size: 100%;
+    border: none;
+}
+table.search-table button:hover{
     text-decoration: underline;
 }
 
@@ -181,8 +222,18 @@ ul.select2-results {
     <div class="grid-button">
         <input type="file" id="fileInput" style="display:none;">
         <button onclick="loadScript()" type="file">
-            <img src="assets/button.png">
+            <img src="assets/upload.png">
         </button>
+    </div>
+    <div class="grid-src">
+        <select class="dropdown_container" id="src_container">
+            <!-- <option value ="" disabled selected hidden>Source Vertex</option> -->
+        </select>
+    </div>
+    <div class="grid-target">
+        <select class="dropdown_container" id="target_container">
+            <!-- <option value ="" disabled selected hidden>Target Vertex</option> -->
+        </select>
     </div>
     <div class="grid-graph" id="grid-graph">
         <!-- <img src = "assets/Graph.png"> -->
@@ -190,25 +241,39 @@ ul.select2-results {
     <div class="grid-search">
         <table class="search-table">
             <tr>
-                <td>Breadth First Search
-                    <input type = "button" onclick="bfs()"></input>
+                <td>
+                    <button onclick="bfs()">Breadth First Search</button>
                 </td>
             </tr>
             <tr>
-                <td>Depth First Search</td>
+                <td>
+                    <button onclick="dfs()">Depth First Search</button>
+                </td>
             </tr>
             <tr>
-                <td>Dijkastra Search</td>
+                <td>
+                    <button onclick="dijkastra()">Dijkastra Search</button>
+                </td>
             </tr>
             <tr>
-                <td>A* Search</td>
+                <td>
+                    <button onclick="astar()">A* Search</button>
+                </td>
             </tr>
             <tr>
-                <td>Greedy Search</td>
+                <td>
+                    <button onclick="greedy()">Greedy Search</button>
+                </td>
             </tr>
         </table>
     </div>
-    <div class="grid-result">Result</div>
+    <div class="grid-result">Result
+        <table id = "searchTable" border = "1" hidden = "true">
+            <tr>
+              <th>Vertice ID</th>
+            </tr> 
+          </table>
+    </div>
     
     <script src = 'app.js'></script>
     <script>

@@ -20,7 +20,7 @@ var simulation;
 var graphLoaded = false;
 
 const unmarkedColour = "#D3D3D3"
-const markedColour = "#006400"
+const markedColour = "#6F73D2"
 
 var nodeChecklabel;
 
@@ -103,11 +103,6 @@ function displayGraph(data) {
 
         }
 
-    function setColor() {
-        console.log("A");
-        node
-            console.log(function(d) {return d.marked});
-    }
 
     getDropDownData();
 
