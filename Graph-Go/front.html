@@ -79,7 +79,50 @@ html {
     grid-area: result;
     color: #7681B3;
     background-color: #D9F0FF;
-    border-top:5px solid #7681B3
+    display: grid;
+    grid-template-areas:
+    'wasm-title js-title'
+    'wasm-results js-results'
+    'vertice-order vertice-order';
+    border: 2px #7681B3;
+}
+
+.grid-result-vertices {
+    grid-area: vertice-order;
+    color: #7681B3;
+    background-color: #D9F0FF;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 200px, 1fr);
+    grid-auto-flow: column;
+    border: 2px solid #7681B3;
+}
+
+.grid-result-wasm-title {
+    border: 2px solid #7681B3;
+    text-align: center
+
+}
+
+.grid-result-wasm-results {
+    border: 2px solid #7681B3;
+    text-align: center
+
+}
+
+.grid-result-js-title {
+    border: 2px solid #7681B3;
+    text-align: center
+}
+
+.grid-result-js-results {
+    border: 2px solid #7681B3;
+    text-align: center
+}
+
+
+.grid-result-entry {
+    border: 2px solid #7681B3;
+    text-align: center
 }
 
 .grid-src select {
@@ -293,12 +336,13 @@ ul.select2-results {
             </tr>
         </table>
     </div>
-    <div class="grid-result">Result
-        <table id = "searchTable" border = "1" hidden = "true">
-            <tr>
-              <th>Vertice ID</th>
-            </tr> 
-          </table>
+    <div class="grid-result">
+        <div class="grid-result-wasm-title"> Wasm</div>
+        <div class="grid-result-js-title"> JS</div>
+        <div class="grid-result-wasm-results" id="wasm-results"></div>
+        <div class="grid-result-js-results" id="js-results"></div>
+
+        <div class="grid-result-vertices" id="grid-result-id"></div>
     </div>
     
     <script src = 'app.js'></script>

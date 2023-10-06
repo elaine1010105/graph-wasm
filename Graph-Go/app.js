@@ -1,3 +1,43 @@
+const importObject = {
+    env: {
+      exit: function() {
+        // Implement the behavior of the 'exit' function here
+      },
+      __assert_fail: function() {
+        // Implement the behavior of the '__assert_fail' function here
+      },
+      __syscall_openat: function() {
+        // Implement the behavior of the '__syscall_openat' function here
+      },
+      __syscall_fcntl64: function() {
+        // Implement the behavior of the '__syscall_fcntl64' function here
+      },
+      __syscall_ioctl: function() {
+        // Implement the behavior of the '__syscall_ioctl' function here
+      },
+      emscripten_memcpy_big: function() {
+        // Implement the behavior of the 'emscripten_memcpy_big' function here
+      },
+      emscripten_resize_heap: function() {
+        // Implement the behavior of the 'emscripten_resize_heap' function here
+      },
+    },
+    wasi_snapshot_preview1: {
+      fd_write: function() {
+        // Implement the behavior of the 'fd_write' function here
+      },
+      fd_read: function() {
+        // Implement the behavior of the 'fd_read' function here
+      },
+      fd_close: function() {
+        // Implement the behavior of the 'fd_close' function here
+      },
+      fd_seek: function() {
+        // Implement the behavior of the 'fd_seek' function here
+      },
+    },
+  };
+
 const graphDiv = d3.select('#grid-graph');
 // set the dimensions and margins of the graph
 const margin = {top: 0, right: 0, bottom: 0, left: 0},
@@ -99,17 +139,14 @@ function displayGraph(data) {
         nodeChecklabel
             .attr("x", function(d){return ((d.source.x+d.target.x)/2); })
             .attr("y", function (d) {return ((d.source.y+d.target.y)/2); })
-            .text(function (d) { return d.source.id; });
-
+            //.text(function (d) { return d.source.id; });
+            .text("1");
         }
 
 
     getDropDownData();
 
 }
-const importObject = {
-    imports: { imported_func: (arg) => console.log(arg) },
-  };
 function loadWasm() {
     WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
     );
@@ -128,10 +165,15 @@ function displayMarkedNodes() {
 }
 
 function dfs() {
+    dfsJS();
+    dfsWASM();
+}
+
+function dfsJS() {
     if(!graphLoaded) {
         return;
     }
-    
+    const startTime = performance.now();
     const visited = [];
     const queue = [];
     const linkArray = simulation.force("link").links();
@@ -170,21 +212,36 @@ function dfs() {
         });
     }
     displayMarkedNodes();                     
-    
-    var table = document.getElementById("searchTable");
-    table.innerHTML = "";
-    table.insertRow().insertCell().textContent = "Vertice ID";
-    table.removeAttribute("hidden");
-    for(i in visited) {
-            var newRow = table.insertRow();
-            newRow.insertCell().textContent = visited[i];
-        }
+    displaySearchResults(visited);
+    const endTime = performance.now();
+    document.getElementById("js-results").textContent = endTime-startTime;
+
 }
 
-function bfs() {
+function dfsWASM() {
+    const startTime = performance.now();
+
+    WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
+        result => {
+            const instance = result.instance;
+            const exports = instance.exports;
+            console.log(Object.keys(exports));
+        });
+
+    const endTime = performance.now();
+    document.getElementById("wasm-results").textContent = endTime-startTime;
+}
+
+function bfs(){
+    bfsJS();
+    bfsWASM();
+}
+
+function bfsJS() {
     if(!graphLoaded) {
         return;
     }
+    const startTime = performance.now();
     
     const visited = [];
     const queue = [];
@@ -225,27 +282,58 @@ function bfs() {
         queue.shift();
     }
     displayMarkedNodes();                
-    
-    var table = document.getElementById("searchTable");
-    table.innerHTML = "";
-    table.insertRow().insertCell().textContent = "Vertice ID";
-    table.removeAttribute("hidden");
-    for(i in visited) {
-            var newRow = table.insertRow();
-            newRow.insertCell().textContent = visited[i];
-        }
+    displaySearchResults(visited);
+
+    const endTime = performance.now();
+    document.getElementById("js-results").textContent = endTime-startTime;
+    console.log(endTime-startTime);
 }
 
+function bfsWASM() {
+    const startTime = performance.now();
 
+    WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
+        result => {
+            const instance = result.instance;
+            const exports = instance.exports;
+            console.log(Object.keys(exports));
+        });
 
+    const endTime = performance.now();
+    document.getElementById("wasm-results").textContent = endTime-startTime;
+}
+
+function displaySearchResults(visited) {
+    var table = document.getElementById("grid-result-id");
+    table.innerHTML = "";
+    const entry = document.createElement('div');
+    entry.textContent = "Vertice ID";
+    table.style.display = "grid";
+    table.appendChild(entry);
+
+    table.style.gridTemplateColumns = "repeat(${visited.length/5}, minmax(200px, 1fr))";
+    console.log(visited.length);
+    for(i in visited) {
+        const verticeIdEntry = document.createElement('div');
+        verticeIdEntry.className = 'grid-result-entry';
+        verticeIdEntry.textContent = visited[i];
+        table.appendChild(verticeIdEntry);
+    }
+}
 
 function dijkastra() {
+    dijkastraJS();
+    dijkastraWASM();
+}
+
+function dijkastraJS() {
     if(!graphLoaded) {
         return;
     }
+    const startTime = performance.now();
 
-    var table = document.getElementById("searchTable");
-    table.setAttribute("hidden", "true");
+    var table = document.getElementById("grid-result-id");
+    table.style.display = "none";
 
 
     const linkArray = simulation.force("link").links();
@@ -279,9 +367,13 @@ function dijkastra() {
         linkArray.forEach(function(link) {
             if(link.source.name === current.name) {
                 //Update the distance
-                if(link.target.distance > link.source.distance + link.source.id) {
-                    link.target.distance = link.source.distance + link.source.id;
+                // if(link.target.distance > link.source.distance + link.source.id) {
+                //     link.target.distance = link.source.distance + link.source.id;
+                // }
+                if(link.target.distance > link.source.distance + 1) {
+                    link.target.distance = link.source.distance + 1;
                 }
+
                 //Add the first occurence to the queue
                 if(link.target.marked === 0) {
                     queue.push(link.target);
@@ -292,6 +384,9 @@ function dijkastra() {
                 //Update the distance
                 if(link.source.distance > link.target.distance + link.source.id) {
                     link.source.distance = link.target.distance + link.source.id;
+                }
+                if(link.source.distance > link.target.distance + 1) {
+                    link.source.distance = link.target.distance + 1;
                 }
                 //Add the first occurence to the queue
                 if(link.source.marked === 0) {
@@ -341,10 +436,28 @@ function dijkastra() {
 
     nodeChecklabel.text(function(d) {
         if(d.target.distance > d.source.distance) {
-            return d.source.id + "(" + d.target.distance + ")"
+            return d.target.distance
         };
-        return d.source.id + "(" + d.source.distance + ")";
+        return d.source.distance;
         })
+
+    const endTime = performance.now();
+    document.getElementById("js-results").textContent = endTime-startTime;
+    
+}
+
+function dijkastraWASM() {
+    const startTime = performance.now();
+
+    WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
+        result => {
+            const instance = result.instance;
+            const exports = instance.exports;
+            console.log(Object.keys(exports));
+        });
+
+    const endTime = performance.now();
+    document.getElementById("wasm-results").textContent = endTime-startTime;
 }
 
 function getDropDownData() {
@@ -382,3 +495,5 @@ function readBFS() {
         console.log(data);
     })
 }
+
+
