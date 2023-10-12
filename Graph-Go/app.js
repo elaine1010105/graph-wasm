@@ -127,8 +127,8 @@ function displayGraph(data) {
             .attr("y2", function(d) { return d.target.y; });
 
         node
-            .attr("cx", function (d) { d.x = Math.max(8, Math.min(width-8, d.x)); return d.x+6; })
-            .attr("cy", function(d) { d.y = Math.max(8, Math.min(width-8, d.y)); return d.y-6;  })
+            .attr("cx", function (d) { d.x = Math.max(16, Math.min(width-16, d.x)); return d.x; })
+            .attr("cy", function(d) { d.y = Math.max(16, Math.min(height-16, d.y)); return d.y;  })
 
 
         label
@@ -404,7 +404,7 @@ function dijkastraJS() {
     ///WORK OUT SHORTEST PATH
     var targetNode;
    //Reset nodes
-   nodeArray.forEach(function(d) {
+    nodeArray.forEach(function(d) {
         d.marked = 0;
         if(d.name === target) {
             targetNode = d;
@@ -460,6 +460,134 @@ function dijkastraWASM() {
     document.getElementById("wasm-results").textContent = endTime-startTime;
 }
 
+function astar() {
+    astarWASM();
+    astarJS();
+}
+
+function astarJS() {
+    if(!graphLoaded) {
+        return;
+    }
+    const startTime = performance.now();
+
+    var table = document.getElementById("grid-result-id");
+    table.style.display = "none";
+
+
+    const linkArray = simulation.force("link").links();
+
+
+    const src = document.getElementById("src_container").options[document.getElementById("src_container").selectedIndex].value;
+    const target = document.getElementById("target_container").options[document.getElementById("target_container").selectedIndex].value;
+
+    linkArray.forEach(function(d) {
+        d.pathWeighted = Infinity;
+    });
+
+    const visited = [];
+    const queue = [];
+
+    const fscore = new Map();
+
+    var targetNode;
+
+    const nodeArray = svg.selectAll("circle").data();
+    nodeArray.forEach(function(d) {
+        d.marked = 0;
+        d.distance = Infinity;
+        fscore.set(d.name, Infinity);
+
+        if(d.name === src) {
+            d.distance = 0;
+            fscore.set(d.name, 0);
+            queue.push(d);
+            //0 = not visited, 1 = open set, 2 = closed set
+            d.marked = 1;
+
+        }
+        if(d.name === target) {
+            targetNode = d;
+        }
+    });
+
+    while(queue.length != 0) {
+        var current = queue.shift();
+        visited.push(current);
+        linkArray.forEach(function(link){
+            if(link.source.name === current.name) {
+                //check if distance is greater than current distance
+                if(link.target.distance > link.source.distance) {
+                    link.target.distance = link.source.distance + 1;
+                    //set f score, heuristic: closer alphanumeric character is closer node
+                    fscore.set(link.source.name, link.target.distance+targetNode.id-current.id);
+                }
+                //Add the first occurence to the queue
+                if(link.target.marked === 0) {
+                    queue.push(link.target);
+                    link.target.marked = 1;
+                }
+            }
+            if(link.target.name === current.name) {
+                //check if distance is greater than current distance
+                if(link.source.distance > link.target.distance) {
+                    link.source.distance = link.target.distance + 1;
+                    //set f score
+                    fscore.set(link.source.name, link.target.distance+targetNode.id-current.id);
+                }
+                //Add the first occurence to the queue
+                if(link.source.marked === 0) {
+                    queue.push(link.source);
+                    link.source.marked = 1;
+                }
+            }
+        })
+        queue.sort(function(a,b) {
+            return(fscore.get(a.name) - fscore.get(b.name));
+        })
+    }
+
+    //Reset nodes
+    nodeArray.forEach(function(d) {
+        d.marked = 0;
+        if(d.name === target) {
+            targetNode = d;
+            targetNode.marked = 1;
+        }
+    })
+    console.log(visited);
+    while(targetNode != visited[0]) {
+        var closerNode = targetNode;
+        linkArray.forEach(function (link) {
+            //Get the closest node
+            if(link.source === targetNode) {
+                if(link.target.distance < closerNode.distance) {
+                    closerNode = link.target;
+                }
+            }
+            if(link.target === targetNode) {
+                if(link.source.distance < closerNode.distance) {
+                    closerNode = link.source;
+                }
+            }
+        })
+        targetNode = closerNode;
+        targetNode.marked = 1;
+    }
+
+    displayMarkedNodes();
+
+    nodeChecklabel.text(function(d) {
+        if(d.target.distance > d.source.distance) {
+            return d.target.distance
+        };
+        return d.source.distance;
+        })
+
+    const endTime = performance.now();
+    document.getElementById("js-results").textContent = endTime-startTime;
+}
+
 function getDropDownData() {
 
     const nodes = svg.selectAll("circle").data();
@@ -484,8 +612,21 @@ function getDropDownData() {
         nodeOption.text = nodeText;
         dropDown.appendChild(nodeOption);
     });
-    
   }
+
+function astarWASM() {
+    const startTime = performance.now();
+
+    WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
+        result => {
+            const instance = result.instance;
+            const exports = instance.exports;
+            console.log(Object.keys(exports));
+        });
+
+    const endTime = performance.now();
+    document.getElementById("wasm-results").textContent = endTime-startTime;
+}
 
 
 
