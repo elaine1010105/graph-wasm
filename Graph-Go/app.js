@@ -637,4 +637,9 @@ function readBFS() {
     })
 }
 
-
+function graphinformation(){
+    const nV = document.getElementById("vertics-number");
+    nV.text =  nodeArray.size();
+    const nE = document.getElementById("edges-number");
+    nE.text =  linkArray.size();
+}

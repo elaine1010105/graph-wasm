@@ -63,6 +63,35 @@ html {
     grid-area: header;
     color: #7681B3;
     border-bottom: 1px solid #7681B3;
+    background-color: #D9F0FF;
+    display: grid;
+    grid-template-areas:
+    'vertices-title vertices-number'
+    'edges-title edges-number';
+}
+
+.grid-header-vertices-title {
+    border: 2px solid #7681B3;
+    text-align: center
+
+}
+
+.grid-header-vertices-number {
+    border: 2px solid #7681B3;
+    text-align: center
+
+}
+
+.grid-header-edges-title {
+    border: 2px solid #7681B3;
+    text-align: center
+
+}
+
+.grid-header-edges-number {
+    border: 2px solid #7681B3;
+    text-align: center
+
 }
 
 .grid-graph {
@@ -303,6 +332,10 @@ ul.select2-results {
         </select>
     </div>
     <div class="grid-header">
+        <div class="grid-header-vertices-title"> Vertices</div>
+        <div class="grid-header-vertices-number" id="vertics-number"></div>
+        <div class="grid-header-edges-title"> Edges</div>
+        <div class="grid-header-edges-number" id="edges-number"></div>
     </div>
     <div class="grid-graph" id="grid-graph">
         <!-- <img src = "assets/Graph.png"> -->
@@ -331,7 +364,7 @@ ul.select2-results {
             </tr>
             <tr>
                 <td>
-                    <button onclick="greedy()">Greedy Search</button>
+                    <button onclick="kcore()">K-core Algorithm</button>
                 </td>
             </tr>
         </table>
