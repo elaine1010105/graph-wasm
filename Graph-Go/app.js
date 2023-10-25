@@ -1,3 +1,7 @@
+
+/*These functions don't need to do anything; they just need a declaration in the import object
+From functions used imported by libraries but not called
+*/
 const importObject = {
     env: {
       exit: function() {
@@ -63,6 +67,9 @@ const unmarkedColour = "#D3D3D3"
 const markedColour = "#6F73D2"
 
 var nodeChecklabel;
+
+var listOfNodes = [];
+var listOfLinks = [];
 
 function graphReady(inputFile) {
     displayGraph(inputFile);
@@ -142,9 +149,11 @@ function displayGraph(data) {
             //.text(function (d) { return d.source.id; });
             .text("1");
         }
-
+    listOfLinks = simulation.force("link").links();
+    listOfNodes = svg.selectAll("circle");
 
     getDropDownData();
+    graphInformation();
 
 }
 function loadWasm() {
@@ -153,7 +162,7 @@ function loadWasm() {
 }
 
 function displayMarkedNodes() {
-    const nodeArray = svg.selectAll("circle")
+    listOfNodes
         .style("fill", function(d) {
             if(d.marked === 1) {
                 return markedColour;
@@ -176,12 +185,11 @@ function dfsJS() {
     const startTime = performance.now();
     const visited = [];
     const queue = [];
-    const linkArray = simulation.force("link").links();
 
     const src = document.getElementById("src_container").options[document.getElementById("src_container").selectedIndex].value;
 
     //Reset nodes
-    const nodeArray = svg.selectAll("circle")
+    listOfNodes
     .attr("marked", function(d) {
         d.marked = 0;
         if(d.name === src) {
@@ -195,7 +203,7 @@ function dfsJS() {
     while(queue.length != 0) {
         var current = queue.pop();
         visited.push(current);
-        linkArray.forEach(function(link) {
+        listOfLinks.forEach(function(link) {
             if(link.source.name === current) {
                 if(link.target.marked === 0) {
                     queue.push(link.target.name);
@@ -245,12 +253,11 @@ function bfsJS() {
     
     const visited = [];
     const queue = [];
-    const linkArray = simulation.force("link").links();
 
     const src = document.getElementById("src_container").options[document.getElementById("src_container").selectedIndex].value;
 
     //Reset nodes
-    const nodeArray = svg.selectAll("circle")
+    listOfNodes
      .attr("marked", function(d) {
         d.marked = 0;
         if(d.name === src) {
@@ -262,7 +269,7 @@ function bfsJS() {
     queue.push(src);
 
     while(queue.length != 0) {
-        linkArray.forEach(function(link) {
+        listOfLinks.forEach(function(link) {
             if(link.source.name === queue[0]) {
                 if(link.target.marked === 0) {
                     queue.push(link.target.name);
@@ -275,7 +282,6 @@ function bfsJS() {
                     queue.push(link.source.name);
                     link.source.marked = 1;
                     visited.push(link.source.name);
-                    console.log(link.source);
                 }
             }
         });
@@ -335,22 +341,17 @@ function dijkastraJS() {
     var table = document.getElementById("grid-result-id");
     table.style.display = "none";
 
-
-    const linkArray = simulation.force("link").links();
-
-
     const src = document.getElementById("src_container").options[document.getElementById("src_container").selectedIndex].value;
     const target = document.getElementById("target_container").options[document.getElementById("target_container").selectedIndex].value;;
 
-    linkArray.forEach(function(d) {
+    listOfLinks.forEach(function(d) {
         d.pathWeighted = Infinity;
     });
 
     const visited = [];
     const queue = [];
 
-    const nodeArray = svg.selectAll("circle").data();
-    nodeArray.forEach(function(d) {
+    listOfNodes.forEach(function(d) {
         d.distance = Infinity;
         d.marked = 0;
         if(d.name === src) {
@@ -364,7 +365,7 @@ function dijkastraJS() {
     while(queue.length != 0) {
         var current = queue.shift();
         visited.push(current);
-        linkArray.forEach(function(link) {
+        listOfLinks.forEach(function(link) {
             if(link.source.name === current.name) {
                 //Update the distance
                 // if(link.target.distance > link.source.distance + link.source.id) {
@@ -404,7 +405,7 @@ function dijkastraJS() {
     ///WORK OUT SHORTEST PATH
     var targetNode;
    //Reset nodes
-    nodeArray.forEach(function(d) {
+    listOfNodes.forEach(function(d) {
         d.marked = 0;
         if(d.name === target) {
             targetNode = d;
@@ -413,7 +414,7 @@ function dijkastraJS() {
    })
     while(targetNode != visited[0]) {
         var closerNode = targetNode;
-        linkArray.forEach(function (link) {
+        listOfLinks.forEach(function (link) {
             //Get the closest node
             if(link.source === targetNode) {
                 if(link.target.distance < closerNode.distance) {
@@ -474,14 +475,10 @@ function astarJS() {
     var table = document.getElementById("grid-result-id");
     table.style.display = "none";
 
-
-    const linkArray = simulation.force("link").links();
-
-
     const src = document.getElementById("src_container").options[document.getElementById("src_container").selectedIndex].value;
     const target = document.getElementById("target_container").options[document.getElementById("target_container").selectedIndex].value;
 
-    linkArray.forEach(function(d) {
+    listOfLinks.forEach(function(d) {
         d.pathWeighted = Infinity;
     });
 
@@ -492,8 +489,7 @@ function astarJS() {
 
     var targetNode;
 
-    const nodeArray = svg.selectAll("circle").data();
-    nodeArray.forEach(function(d) {
+    listOfNodes.forEach(function(d) {
         d.marked = 0;
         d.distance = Infinity;
         fscore.set(d.name, Infinity);
@@ -514,7 +510,7 @@ function astarJS() {
     while(queue.length != 0) {
         var current = queue.shift();
         visited.push(current);
-        linkArray.forEach(function(link){
+        listOfLinks.forEach(function(link){
             if(link.source.name === current.name) {
                 //check if distance is greater than current distance
                 if(link.target.distance > link.source.distance) {
@@ -548,7 +544,7 @@ function astarJS() {
     }
 
     //Reset nodes
-    nodeArray.forEach(function(d) {
+    listOfNodes.forEach(function(d) {
         d.marked = 0;
         if(d.name === target) {
             targetNode = d;
@@ -558,7 +554,7 @@ function astarJS() {
     console.log(visited);
     while(targetNode != visited[0]) {
         var closerNode = targetNode;
-        linkArray.forEach(function (link) {
+        listOfLinks.forEach(function (link) {
             //Get the closest node
             if(link.source === targetNode) {
                 if(link.target.distance < closerNode.distance) {
@@ -637,9 +633,10 @@ function readBFS() {
     })
 }
 
-function graphinformation(){
-    const nV = document.getElementById("vertics-number");
-    nV.text =  nodeArray.size();
+function graphInformation(){
+    const nV = document.getElementById("vertices-number");
+    nV.textContent =  listOfNodes.size();
+    console.log("A");
     const nE = document.getElementById("edges-number");
-    nE.text =  linkArray.size();
+    nE.textContent =  Object.keys(listOfLinks).length;
 }
