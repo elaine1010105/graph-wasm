@@ -351,7 +351,7 @@ function dijkastraJS() {
     const visited = [];
     const queue = [];
 
-    listOfNodes.forEach(function(d) {
+    listOfNodes.data().forEach(function(d) {
         d.distance = Infinity;
         d.marked = 0;
         if(d.name === src) {
@@ -405,7 +405,7 @@ function dijkastraJS() {
     ///WORK OUT SHORTEST PATH
     var targetNode;
    //Reset nodes
-    listOfNodes.forEach(function(d) {
+    listOfNodes.data().forEach(function(d) {
         d.marked = 0;
         if(d.name === target) {
             targetNode = d;
@@ -489,7 +489,7 @@ function astarJS() {
 
     var targetNode;
 
-    listOfNodes.forEach(function(d) {
+    listOfNodes.data().forEach(function(d) {
         d.marked = 0;
         d.distance = Infinity;
         fscore.set(d.name, Infinity);
@@ -544,7 +544,7 @@ function astarJS() {
     }
 
     //Reset nodes
-    listOfNodes.forEach(function(d) {
+    listOfNodes.data().forEach(function(d) {
         d.marked = 0;
         if(d.name === target) {
             targetNode = d;
@@ -639,4 +639,48 @@ function graphInformation(){
     console.log("A");
     const nE = document.getElementById("edges-number");
     nE.textContent =  Object.keys(listOfLinks).length;
+
+}
+
+const deformedGraph = d3.select("#deformed-graph")
+.append("svg")
+.attr("width", 700)
+.attr("height", 600)
+
+function kcore(kVal) {
+//Get this working later
+/*    const deformedNodes = deformedGraph
+        .selectAll("circle")
+        .data(listOfNodes)
+        .join("circle")
+        .attr("r", 16)
+        .style("fill", "#123456")
+
+    // var dupNodes = deformedGraph.selectAll("#deformed-graph")
+    //     .data(listOfNodes)
+    //     .enter()
+    //     .append(function(d) {return d.cloneNode(true)})
+    console.log(deformedGraph.selectAll("circle"))
+    */
+    //temp
+    var nodesToDelete = [];
+
+    listOfNodes.data().forEach(function(d,i) {
+        var degree = listOfLinks.filter(function(link) {
+            return link.source.id == d.id || link.target.id == d.id
+        })
+        console.log(degree);
+        if(degree.length < kVal) {
+            nodesToDelete.push(d)
+        }
+    })
+    if(nodesToDelete == []) {
+        return
+    }
+    console.log(nodesToDelete)
+    d3.selectAll("node")
+        .filter(function(n) {
+            return nodesToDelete.includes(n)
+        })
+        .remove();
 }
