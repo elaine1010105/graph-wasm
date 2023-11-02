@@ -678,9 +678,11 @@ function kcore(kVal) {
         return
     }
     console.log(nodesToDelete)
-    d3.selectAll("node")
+    var svgNodes = svg.selectAll("circle")
         .filter(function(n) {
             return nodesToDelete.includes(n)
         })
-        .remove();
+    console.log(svgNodes)
+    svgNodes.attr("fill-opacity", 0)
+        // .attr("stroke-opacity", 0.5)
 }
