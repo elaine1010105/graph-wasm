@@ -178,7 +178,7 @@ function dfs() {
     dfsWASM();
 }
 
-function dfsJS() {
+function dfsJS(display = true) {
     if(!graphLoaded) {
         return;
     }
@@ -219,25 +219,30 @@ function dfsJS() {
             }
         });
     }
-    displayMarkedNodes();                     
-    displaySearchResults(visited);
     const endTime = performance.now();
-    document.getElementById("js-results").textContent = endTime-startTime;
+    if(display) {
+        displayMarkedNodes();                     
+        displaySearchResults(visited);    
+        document.getElementById("js-results").textContent = endTime-startTime;
+    }
+    return endTime-startTime;
 
 }
 
-function dfsWASM() {
+function dfsWASM(display = true) {
     const startTime = performance.now();
 
     WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
         result => {
             const instance = result.instance;
             const exports = instance.exports;
-            console.log(Object.keys(exports));
         });
 
     const endTime = performance.now();
-    document.getElementById("wasm-results").textContent = endTime-startTime;
+    if(display) {
+        document.getElementById("wasm-results").textContent = endTime-startTime;
+    }
+    return endTime-startTime;
 }
 
 function bfs(){
@@ -245,7 +250,7 @@ function bfs(){
     bfsWASM();
 }
 
-function bfsJS() {
+function bfsJS(display = true) {
     if(!graphLoaded) {
         return;
     }
@@ -287,26 +292,29 @@ function bfsJS() {
         });
         queue.shift();
     }
-    displayMarkedNodes();                
-    displaySearchResults(visited);
-
     const endTime = performance.now();
-    document.getElementById("js-results").textContent = endTime-startTime;
-    console.log(endTime-startTime);
+    if(display) {
+        displayMarkedNodes();                     
+        displaySearchResults(visited);    
+        document.getElementById("js-results").textContent = endTime-startTime;
+    }
+    return endTime-startTime;
 }
 
-function bfsWASM() {
+function bfsWASM(display = true) {
     const startTime = performance.now();
 
     WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
         result => {
             const instance = result.instance;
             const exports = instance.exports;
-            console.log(Object.keys(exports));
         });
 
     const endTime = performance.now();
-    document.getElementById("wasm-results").textContent = endTime-startTime;
+    if(display) {
+        document.getElementById("wasm-results").textContent = endTime-startTime;
+    }
+    return endTime-startTime;
 }
 
 function displaySearchResults(visited) {
@@ -318,7 +326,6 @@ function displaySearchResults(visited) {
     table.appendChild(entry);
 
     table.style.gridTemplateColumns = "repeat(${visited.length/5}, minmax(200px, 1fr))";
-    console.log(visited.length);
     for(i in visited) {
         const verticeIdEntry = document.createElement('div');
         verticeIdEntry.className = 'grid-result-entry';
@@ -332,7 +339,7 @@ function dijkastra() {
     dijkastraWASM();
 }
 
-function dijkastraJS() {
+function dijkastraJS(display = true) {
     if(!graphLoaded) {
         return;
     }
@@ -429,36 +436,36 @@ function dijkastraJS() {
         })
         targetNode = closerNode;
         targetNode.marked = 1;
-        console.log(targetNode);
     }
-
-    displayMarkedNodes();
-
-
-    nodeChecklabel.text(function(d) {
-        if(d.target.distance > d.source.distance) {
-            return d.target.distance
-        };
-        return d.source.distance;
-        })
-
     const endTime = performance.now();
-    document.getElementById("js-results").textContent = endTime-startTime;
-    
+
+    if(display) {
+        displayMarkedNodes();                     
+        nodeChecklabel.text(function(d) {
+            if(d.target.distance > d.source.distance) {
+                return d.target.distance
+            };
+            return d.source.distance;
+            })
+        document.getElementById("js-results").textContent = endTime-startTime;
+    }
+    return endTime - startTime;    
 }
 
-function dijkastraWASM() {
+function dijkastraWASM(display = true) {
     const startTime = performance.now();
 
     WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
         result => {
             const instance = result.instance;
             const exports = instance.exports;
-            console.log(Object.keys(exports));
         });
 
     const endTime = performance.now();
-    document.getElementById("wasm-results").textContent = endTime-startTime;
+    if(display) {
+        document.getElementById("wasm-results").textContent = endTime-startTime;
+    }
+    return endTime-startTime;
 }
 
 function astar() {
@@ -466,7 +473,7 @@ function astar() {
     astarJS();
 }
 
-function astarJS() {
+function astarJS(display = true) {
     if(!graphLoaded) {
         return;
     }
@@ -551,7 +558,6 @@ function astarJS() {
             targetNode.marked = 1;
         }
     })
-    console.log(visited);
     while(targetNode != visited[0]) {
         var closerNode = targetNode;
         listOfLinks.forEach(function (link) {
@@ -571,17 +577,18 @@ function astarJS() {
         targetNode.marked = 1;
     }
 
-    displayMarkedNodes();
-
-    nodeChecklabel.text(function(d) {
-        if(d.target.distance > d.source.distance) {
-            return d.target.distance
-        };
-        return d.source.distance;
-        })
-
     const endTime = performance.now();
-    document.getElementById("js-results").textContent = endTime-startTime;
+    if(display) {
+        displayMarkedNodes();                     
+        nodeChecklabel.text(function(d) {
+            if(d.target.distance > d.source.distance) {
+                return d.target.distance
+            };
+            return d.source.distance;
+            })
+        document.getElementById("js-results").textContent = endTime-startTime;
+    }
+    return endTime - startTime;   
 }
 
 function getDropDownData() {
@@ -610,18 +617,20 @@ function getDropDownData() {
     });
   }
 
-function astarWASM() {
+function astarWASM(display = false) {
     const startTime = performance.now();
 
     WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
         result => {
             const instance = result.instance;
             const exports = instance.exports;
-            console.log(Object.keys(exports));
         });
 
     const endTime = performance.now();
-    document.getElementById("wasm-results").textContent = endTime-startTime;
+    if(display) {
+        document.getElementById("wasm-results").textContent = endTime-startTime;
+    }
+    return endTime-startTime;
 }
 
 
@@ -685,4 +694,74 @@ function kcore(kVal) {
     console.log(svgNodes)
     svgNodes.attr("fill-opacity", 0)
         // .attr("stroke-opacity", 0.5)
+}
+
+function doExperiment() {
+   bfsExperiment();
+   dfsExperiment();
+   dijkastraExperiment();
+   astarExperiment();
+
+    // experimentTimeJS = 0;
+    // experimentTimeWasm = 0;
+    // for(var i = 0; i < 1000; i++) {
+    //     experimentTimeWasm += dijkastraWASM();
+    //     experimentTimeJS += dijkastraJS();
+    // }
+    // document.getElementById("dijkastra-wasm").textContent=experimentTimeWasm/1000 +"s";
+    // document.getElementById("dijkastra-js").textContent=experimentTimeJS/1000 +"s";
+
+    // experimentTimeJS = 0;
+    // experimentTimeWasm = 0;
+    // for(var i = 0; i < 1000; i++) {
+    //     experimentTimeWasm += astarWASM();
+    //     experimentTimeJS += astarJS();
+    // }
+    // document.getElementById("astar-wasm").textContent=experimentTimeWasm/1000 +"s";
+    // document.getElementById("astar-js").textContent=experimentTimeJS/1000 +"s";
+}
+
+function bfsExperiment() {
+    var experimentTimeJS = 0;
+    var experimentTimeWasm = 0;
+    for(var i = 0; i < 300; i++) {
+        experimentTimeWasm += bfsWASM();
+        experimentTimeJS += bfsJS();
+    }
+    document.getElementById("bfs-wasm").textContent=experimentTimeWasm/1000 +"s";
+    document.getElementById("bfs-js").textContent=experimentTimeJS/1000 +"s";
+}
+
+function dfsExperiment() {
+     //dfs
+    var experimentTimeJS = 0;
+    var experimentTimeWasm = 0;
+    for(var i = 0; i < 300; i++) {
+        experimentTimeWasm += dfsWASM(false);
+        experimentTimeJS += dfsJS(false);
+    }
+    document.getElementById("dfs-wasm").textContent=experimentTimeWasm/1000 +"s";
+    document.getElementById("dfs-js").textContent=experimentTimeJS/1000 +"s";
+}
+
+function dijkastraExperiment() {
+   var experimentTimeJS = 0;
+   var experimentTimeWasm = 0;
+   for(var i = 0; i < 300; i++) {
+       experimentTimeWasm += dijkastraWASM(false);
+       experimentTimeJS += dijkastraJS(false);
+   }
+   document.getElementById("dijkastra-wasm").textContent=experimentTimeWasm/1000 +"s";
+   document.getElementById("dijkastra-js").textContent=experimentTimeJS/1000 +"s";
+}
+
+function astarExperiment() {
+   var experimentTimeJS = 0;
+   var experimentTimeWasm = 0;
+   for(var i = 0; i < 300; i++) {
+       experimentTimeWasm += astarWASM(false);
+       experimentTimeJS += astarJS(false);
+   }
+   document.getElementById("astar-wasm").textContent=experimentTimeWasm/1000 +"s";
+   document.getElementById("astar-js").textContent=experimentTimeJS/1000 +"s";
 }
