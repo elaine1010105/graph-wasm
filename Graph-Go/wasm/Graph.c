@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 #include "Graph.h"
 
 struct graph {
@@ -120,7 +120,7 @@ Graph GraphReadWeighted(Graph g, int nV) {
 	int nE = 0;
 	printf("Enter edges in the form (u,v, weight): \n");
 	int v, w, weight;
-	while (nE < maxE && scanf("%d %d %d", &v, &w, &weight) == 3) {
+	while (nE < maxE && scanf("%d %d", &v, &w) == 2) {
 		assert(v >= 0 && v < nV);
 		assert(w >= 0 && w < nV);
 		assert(v != w);
@@ -169,7 +169,7 @@ Graph GraphReadFromFile(void) {
 	int nE = 0;
 	int v, w, weight;
 	fprintf(fileOutputptr, "\"links\" : [\n");
-	while (nE < maxE && fscanf(fptr, "%d %d %d", &v, &w, weight) == 3) {
+	while (nE < maxE && fscanf(fptr, "%d %d", &v, &w) == 2) {
 		assert(v >= 0 && v < nV);
 		assert(w >= 0 && w < nV);
 		assert(v != w);
@@ -192,6 +192,39 @@ Graph GraphReadFromFile(void) {
 	fprintf(fileOutputptr, "}");
 	fclose(fptr);
 	fclose(fileOutputptr);
+	return g;
+}
+
+Graph WASMLoadFile(const char* fileName) {
+    FILE *fptr;
+    fptr = fopen(fileName, "r");
+    if(fptr == NULL) {
+        printf("missing file \n");
+        return NULL;
+    }
+    int nV = 0;
+    fscanf(fptr, "%d", &nV);
+	Graph g = GraphNew(nV);
+
+	int maxE;
+    fscanf(fptr, "%d", &maxE);
+	assert(maxE >= 0);
+	
+	int nE = 0;
+	int v, w, weight;
+	while (nE < maxE && fscanf(fptr, "%d %d", &v, &w) == 2) {
+		assert(v >= 0 && v < nV);
+		assert(w >= 0 && w < nV);
+		assert(v != w);
+		
+		if (GraphIsAdjacent(g, v, w)) {
+			printf("WARNING: edge (%d,%d) already exists in the graph\n",
+			       v, w);
+		}
+		GraphAddEdge(g, v, w);
+        g->edgeWeights[nE] = weight;
+		nE++;
+	}
 	return g;
 }
 
@@ -307,4 +340,8 @@ static bool validVertex(Graph g, Vertex v) {
 
 int GetEdgeWeight(Graph g, int i) {
 	return g->edgeWeights[i];
+}
+
+int test(int a) {
+    return a * 2;
 }

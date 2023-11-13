@@ -67,6 +67,8 @@ Graph GraphReadWeighted(Graph g, int n);
 
 Graph GraphReadFromFile(void);
 
+Graph WASMLoadFile(const char* fileName);
+
 /**
  * Creates a copy of the given graph.
  */

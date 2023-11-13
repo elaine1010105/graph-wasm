@@ -20,7 +20,7 @@ void breadthFirstSearch(Graph g, int src) {
 
 	while(!QueueIsEmpty(q)){
 		int item = QueueDequeue(q);
-		printf("%d ", item);	
+		printf("%d \n", item);	
 		for(i = 0; i < num ; i++){
 			if(GraphIsAdjacent(g,item,i) && visited[i] != 1){
 				QueueEnqueue(q, i);
@@ -47,7 +47,7 @@ void depthFirstSearch(Graph g, int src) {
 
 void dfs(Graph g, Vertex v, int *visited){
 	visited[v] = 1;
-	printf("%d ", v);	
+	printf("%d \n", v);	
 	int num = GraphNumVertices(g);
 	for(int i = 0; i < num ; i++){
 		if(GraphIsAdjacent(g,i,v) && visited[i]!=1){
@@ -73,6 +73,7 @@ void dijkstra(Graph g, Vertex src, Vertex target) {
 
 	while(!QueueIsEmpty(q)) {
 		int item = QueueDequeue(q);
+        printf("%d \n", item);
 		if(item == target) {
 			printf("found");
 			return;
@@ -111,7 +112,7 @@ void AStar(Graph g, Vertex src, Vertex target) {
 
 	while(!QueueIsEmpty(q)) {
 		int item = QueueDequeue(q);
-		printf("%d ", item);
+		printf("%d \n", item);
 		if(item == target) {
 			printf("found");
 			return;

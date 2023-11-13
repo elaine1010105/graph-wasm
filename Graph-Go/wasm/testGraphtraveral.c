@@ -7,6 +7,9 @@
 
 void breadthFirstSearch(Graph g, int src);
 void depthFirstSearch(Graph g, int src);
+char* runBFS(char* graphToRead, int src);
+
+Graph graph;
 
 int main(void) {
 	Graph g;
@@ -73,6 +76,12 @@ int main(void) {
 		GreedySearch(g, src, target);
 		printf("\n");
 		break;
+	case 6: //Greedy
+		printf("Breadth first search starting at vertex %d: \n", src);
+        runBFS("input.txt", src);
+		printf("\n");
+		break;
+
 	default:
 		printf("error \n");
 		break;
@@ -80,4 +89,47 @@ int main(void) {
 	GraphFree(g);
 
 	scanf("%d");
+}
+
+char* runBFS(char* graphToRead, int src) {
+    if(graph == NULL) {
+        graph = WASMLoadFile(graphToRead);        
+        printf("created graph");
+    }
+    if(graph != NULL) {
+        breadthFirstSearch(graph, src);
+        return "completed";
+    }
+    return "file not found";
+}
+
+char* runDFS(char* graphToRead, int src) {
+    if(graph == NULL) {
+        graph = WASMLoadFile(graphToRead);        
+        printf("created graph");
+    }    if(graph != NULL) {
+        depthFirstSearch(graph, src);
+    }
+    return "completed";
+}
+char* runDijkastra(char* graphToRead, int src, int target) {
+    if(graph == NULL) {
+        graph = WASMLoadFile(graphToRead);        
+        printf("created graph");
+    }
+    if(graph != NULL) {
+        dijkstra(graph, src, target);
+    }  
+    return "completed";
+}
+
+char* runAStar(char* graphToRead, int src, int target) {
+    if(graph == NULL) {
+        graph = WASMLoadFile(graphToRead);        
+        printf("created graph");
+    } 
+    if(graph != NULL) {
+        AStar(graph, src, target);
+    }  
+    return "completed";
 }

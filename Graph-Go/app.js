@@ -1,4 +1,3 @@
-
 /*These functions don't need to do anything; they just need a declaration in the import object
 From functions used imported by libraries but not called
 */
@@ -62,6 +61,7 @@ var color = d3.scaleOrdinal(d3.schemeSet1);
 var simulation;
 
 var graphLoaded = false;
+var graphName = ""
 
 const unmarkedColour = "#D3D3D3"
 const markedColour = "#6F73D2"
@@ -70,6 +70,45 @@ var nodeChecklabel;
 
 var listOfNodes = [];
 var listOfLinks = [];
+
+var src;
+var target;
+var srcIdx;
+var targetIdx;
+
+function setGraphName(name) {
+    graphName = name;
+}
+
+function updateSrc() {
+    src = document.getElementById("src_container").options[document.getElementById("src_container").selectedIndex].value;
+    getSrcIdx();
+}
+
+function updateTarget() {
+    target = document.getElementById("target_container").options[document.getElementById("target_container").selectedIndex].value;
+    getTargetIdx();
+}
+
+function getSrcIdx() {
+    var dataArr = listOfNodes.data();
+    for(let i = 0; i < dataArr.length; i++) {
+        if(dataArr[i].name == src) {
+            srcIdx = i+1;
+            return;
+        } 
+    }
+}
+
+function getTargetIdx() {
+    var dataArr = listOfNodes.data();
+    for(let i = 0; i < dataArr.length; i++) {
+        if(dataArr[i].name == target) {
+            targetIdx = i+1;
+            return;
+        } 
+    }
+}
 
 function graphReady(inputFile) {
     displayGraph(inputFile);
@@ -156,9 +195,9 @@ function displayGraph(data) {
     graphInformation();
 
 }
-function loadWasm() {
-    WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
-    );
+
+function loadFile() {
+
 }
 
 function displayMarkedNodes() {
@@ -185,8 +224,6 @@ function dfsJS(display = true) {
     const startTime = performance.now();
     const visited = [];
     const queue = [];
-
-    const src = document.getElementById("src_container").options[document.getElementById("src_container").selectedIndex].value;
 
     //Reset nodes
     listOfNodes
@@ -232,11 +269,7 @@ function dfsJS(display = true) {
 function dfsWASM(display = true) {
     const startTime = performance.now();
 
-    WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
-        result => {
-            const instance = result.instance;
-            const exports = instance.exports;
-        });
+    console.log(Module.ccall('runDFS', "string", ['string', 'number'], ["Graphs/"+graphName, srcIdx]));
 
     const endTime = performance.now();
     if(display) {
@@ -258,8 +291,6 @@ function bfsJS(display = true) {
     
     const visited = [];
     const queue = [];
-
-    const src = document.getElementById("src_container").options[document.getElementById("src_container").selectedIndex].value;
 
     //Reset nodes
     listOfNodes
@@ -301,20 +332,19 @@ function bfsJS(display = true) {
     return endTime-startTime;
 }
 
+
 function bfsWASM(display = true) {
     const startTime = performance.now();
 
-    WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
-        result => {
-            const instance = result.instance;
-            const exports = instance.exports;
-        });
+    console.log(Module.ccall('runBFS', "string", ['string', 'number'], ["Graphs/"+graphName, srcIdx]));
 
     const endTime = performance.now();
     if(display) {
         document.getElementById("wasm-results").textContent = endTime-startTime;
     }
+
     return endTime-startTime;
+
 }
 
 function displaySearchResults(visited) {
@@ -335,6 +365,7 @@ function displaySearchResults(visited) {
 }
 
 function dijkastra() {
+
     dijkastraJS();
     dijkastraWASM();
 }
@@ -348,8 +379,7 @@ function dijkastraJS(display = true) {
     var table = document.getElementById("grid-result-id");
     table.style.display = "none";
 
-    const src = document.getElementById("src_container").options[document.getElementById("src_container").selectedIndex].value;
-    const target = document.getElementById("target_container").options[document.getElementById("target_container").selectedIndex].value;;
+
 
     listOfLinks.forEach(function(d) {
         d.pathWeighted = Infinity;
@@ -455,11 +485,7 @@ function dijkastraJS(display = true) {
 function dijkastraWASM(display = true) {
     const startTime = performance.now();
 
-    WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
-        result => {
-            const instance = result.instance;
-            const exports = instance.exports;
-        });
+    console.log(Module.ccall('runDijkastra', "string", ['string', 'number', 'number'], ["Graphs/"+graphName, srcIdx, targetIdx]));
 
     const endTime = performance.now();
     if(display) {
@@ -481,9 +507,6 @@ function astarJS(display = true) {
 
     var table = document.getElementById("grid-result-id");
     table.style.display = "none";
-
-    const src = document.getElementById("src_container").options[document.getElementById("src_container").selectedIndex].value;
-    const target = document.getElementById("target_container").options[document.getElementById("target_container").selectedIndex].value;
 
     listOfLinks.forEach(function(d) {
         d.pathWeighted = Infinity;
@@ -591,6 +614,18 @@ function astarJS(display = true) {
     return endTime - startTime;   
 }
 
+function astarWASM(display = true) {
+    const startTime = performance.now();
+  
+    console.log(Module.ccall('runAStar', "string", ['string', 'number', 'number'], ["Graphs/"+graphName, srcIdx, targetIdx]));
+
+    const endTime = performance.now();
+    if(display) {
+        document.getElementById("wasm-results").textContent = endTime-startTime;
+    }
+    return endTime-startTime;
+}
+
 function getDropDownData() {
 
     const nodes = svg.selectAll("circle").data();
@@ -616,31 +651,6 @@ function getDropDownData() {
         dropDown.appendChild(nodeOption);
     });
   }
-
-function astarWASM(display = false) {
-    const startTime = performance.now();
-
-    WebAssembly.instantiateStreaming(fetch("wasm/GraphGo.wasm"), importObject).then(
-        result => {
-            const instance = result.instance;
-            const exports = instance.exports;
-        });
-
-    const endTime = performance.now();
-    if(display) {
-        document.getElementById("wasm-results").textContent = endTime-startTime;
-    }
-    return endTime-startTime;
-}
-
-
-
-function readBFS() {
-    fetch('results.txt').then(response => response.text)
-    .then((data) => {
-        console.log(data);
-    })
-}
 
 function graphInformation(){
     const nV = document.getElementById("vertices-number");

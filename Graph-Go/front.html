@@ -478,6 +478,7 @@ ul.select2-results {
         </div>
     </div>
 
+    <script src = 'wasm/wasmv2.js'></script>
     <script src = 'app.js'></script>
     <script>
         function loadScript() {
@@ -487,9 +488,13 @@ ul.select2-results {
 
             document.getElementById('fileInput').addEventListener('change', handleFileSelect);
 
+
+            document.getElementById('src_container').addEventListener('change', updateSrc);
+            document.getElementById('target_container').addEventListener('change', updateTarget);
             function handleFileSelect(event) {
                 // Get the selected file(s)
                 var file = event.target.files[0];
+                setGraphName(file.name);
 
                 var reader = new FileReader();
                 reader.onload = function(event) {
