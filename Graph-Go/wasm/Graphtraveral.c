@@ -179,3 +179,41 @@ void GreedySearch(Graph g, Vertex src, Vertex target) {
 	free(visited);
 	QueueFree(q);
 }
+
+void kcore(Graph g, int k, Vertex src){
+	int num = GraphNumVertices(g);
+	int *visited = calloc(num,sizeof(int));
+	int *nodesToDelete = calloc(num,sizeof(int));
+	int i;
+	int j = 0;
+	for(i = 0; i < num ; i++){
+		visited[i] = 0;
+	}
+	Queue q = QueueNew();
+	QueueEnqueue(q, src);
+	visited[src] = 1;
+
+	while(!QueueIsEmpty(q)){
+		int item = QueueDequeue(q);
+		int neighborsum = 0;
+		for(i = 0; i < num ; i++){
+			if(GraphIsAdjacent(g,item,i)){
+				neighborsum += 1;
+				if(visited[i] != 1){
+					QueueEnqueue(q, i);
+					visited[i] = 1;
+				}
+			}	
+		}
+		if(neighborsum < k){
+			nodesToDelete[j] = item;
+			j++;
+		}
+	}
+	if(j == 0){
+		return;
+	}
+	
+	free(visited);
+	QueueFree(q);
+}
