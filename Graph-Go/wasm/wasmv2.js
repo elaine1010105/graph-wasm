@@ -4171,7 +4171,7 @@ var _emscripten_stack_get_current = function() {
 
 /** @type {function(...*):?} */
 var dynCall_jiji = Module["dynCall_jiji"] = createExportWrapper("dynCall_jiji");
-var ___emscripten_embedded_file_data = Module['___emscripten_embedded_file_data'] = 194108;
+var ___emscripten_embedded_file_data = Module['___emscripten_embedded_file_data'] = 322352;
 
 // include: postamble.js
 // === Auto-generated postamble setup entry stuff ===
