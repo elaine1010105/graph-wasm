@@ -26,14 +26,14 @@ const importObject = {
       },
     },
     wasi_snapshot_preview1: {
-      fd_write: function() {
+      fd_wremeite: function() {
         // Implement the behavior of the 'fd_write' function here
       },
       fd_read: function() {
         // Implement the behavior of the 'fd_read' function here
       },
       fd_close: function() {
-        // Implement the behavior of the 'fd_close' function here
+        // Implnt the behavior of the 'fd_close' function here
       },
       fd_seek: function() {
         // Implement the behavior of the 'fd_seek' function here
@@ -203,7 +203,7 @@ function loadFile() {
 function displayMarkedNodes() {
     listOfNodes
         .style("fill", function(d) {
-            if(d.marked === 1) {
+            if(d.marked == 1) {
                 return markedColour;
             }
             else {
@@ -229,26 +229,26 @@ function dfsJS(display = true) {
     listOfNodes
     .attr("marked", function(d) {
         d.marked = 0;
-        if(d.name === src) {
+        if(d.name == src) {
             d.marked = 1;
         }
     })
 
     queue.push(src);
-
+    let num = 0;
 
     while(queue.length != 0) {
         var current = queue.pop();
         visited.push(current);
         listOfLinks.forEach(function(link) {
-            if(link.source.name === current) {
-                if(link.target.marked === 0) {
+            if(link.source.name == current) {
+                if(link.target.marked == 0) {
                     queue.push(link.target.name);
                     link.target.marked = 1;
                 }
             }
-            if(link.target.name === current) {
-                if(link.source.marked === 0) {
+            if(link.target.name == current) {
+                if(link.source.marked == 0) {
                     queue.push(link.source.name);
                     link.source.marked = 1;
 
@@ -259,7 +259,8 @@ function dfsJS(display = true) {
     let endTime = performance.now();
     if(display) {
         displayMarkedNodes();                     
-        displaySearchResults(visited);    
+        displaySearchResults(visited);
+        endTime = performance.now();    
         document.getElementById("js-results").textContent = endTime-startTime;
     }
     return endTime-startTime;
@@ -269,6 +270,7 @@ function dfsJS(display = true) {
 function dfsWASM(display = true) {
     const startTime = performance.now();
 
+                        //function name, return type, [input parameter types], [input parameters]
     console.log(Module.ccall('runDFS', "string", ['string', 'number'], ["Graphs/"+graphName, srcIdx]));
 
     const endTime = performance.now();
@@ -296,7 +298,7 @@ function bfsJS(display = true) {
     listOfNodes
      .attr("marked", function(d) {
         d.marked = 0;
-        if(d.name === src) {
+        if(d.name == src) {
             d.marked = 1;
             visited.push(src);
         }
@@ -306,15 +308,15 @@ function bfsJS(display = true) {
 
     while(queue.length != 0) {
         listOfLinks.forEach(function(link) {
-            if(link.source.name === queue[0]) {
-                if(link.target.marked === 0) {
+            if(link.source.name == queue[0]) {
+                if(link.target.marked == 0) {
                     queue.push(link.target.name);
                     link.target.marked = 1;
                     visited.push(link.target.name);
                 }
             }
-            if(link.target.name === queue[0]) {
-                if(link.source.marked === 0) {
+            if(link.target.name == queue[0]) {
+                if(link.source.marked == 0) {
                     queue.push(link.source.name);
                     link.source.marked = 1;
                     visited.push(link.source.name);
@@ -392,7 +394,7 @@ function dijkastraJS(display = true) {
     listOfNodes.data().forEach(function(d) {
         d.distance = Infinity;
         d.marked = 0;
-        if(d.name === src) {
+        if(d.name == src) {
             d.distance = 0;
             queue.push(d);
             d.marked = 1;
@@ -404,7 +406,7 @@ function dijkastraJS(display = true) {
         var current = queue.shift();
         visited.push(current);
         listOfLinks.forEach(function(link) {
-            if(link.source.name === current.name) {
+            if(link.source.name == current.name) {
                 //Update the distance
                 // if(link.target.distance > link.source.distance + link.source.id) {
                 //     link.target.distance = link.source.distance + link.source.id;
@@ -414,12 +416,12 @@ function dijkastraJS(display = true) {
                 }
 
                 //Add the first occurence to the queue
-                if(link.target.marked === 0) {
+                if(link.target.marked == 0) {
                     queue.push(link.target);
                     link.target.marked = 1;
                 }
             }
-            if(link.target.name === current.name) {
+            if(link.target.name == current.name) {
                 //Update the distance
                 if(link.source.distance > link.target.distance + link.source.id) {
                     link.source.distance = link.target.distance + link.source.id;
@@ -428,7 +430,7 @@ function dijkastraJS(display = true) {
                     link.source.distance = link.target.distance + 1;
                 }
                 //Add the first occurence to the queue
-                if(link.source.marked === 0) {
+                if(link.source.marked == 0) {
                     queue.push(link.source);
                     link.source.marked = 1;
                 }
@@ -445,7 +447,7 @@ function dijkastraJS(display = true) {
    //Reset nodes
     listOfNodes.data().forEach(function(d) {
         d.marked = 0;
-        if(d.name === target) {
+        if(d.name == target) {
             targetNode = d;
             targetNode.marked = 1;
         }
@@ -454,12 +456,12 @@ function dijkastraJS(display = true) {
         var closerNode = targetNode;
         listOfLinks.forEach(function (link) {
             //Get the closest node
-            if(link.source === targetNode) {
+            if(link.source == targetNode) {
                 if(link.target.distance < closerNode.distance) {
                     closerNode = link.target;
                 }
             }
-            if(link.target === targetNode) {
+            if(link.target == targetNode) {
                 if(link.source.distance < closerNode.distance) {
                     closerNode = link.source;
                 }
@@ -526,7 +528,7 @@ function astarJS(display = true) {
         d.distance = Infinity;
         fscore.set(d.name, Infinity);
 
-        if(d.name === src) {
+        if(d.name == src) {
             d.distance = 0;
             fscore.set(d.name, 0);
             queue.push(d);
@@ -534,7 +536,7 @@ function astarJS(display = true) {
             d.marked = 1;
 
         }
-        if(d.name === target) {
+        if(d.name == target) {
             targetNode = d;
         }
     });
@@ -543,7 +545,7 @@ function astarJS(display = true) {
         var current = queue.shift();
         visited.push(current);
         listOfLinks.forEach(function(link){
-            if(link.source.name === current.name) {
+            if(link.source.name == current.name) {
                 //check if distance is greater than current distance
                 if(link.target.distance > link.source.distance) {
                     link.target.distance = link.source.distance + 1;
@@ -551,12 +553,12 @@ function astarJS(display = true) {
                     fscore.set(link.source.name, link.target.distance+targetNode.id-current.id);
                 }
                 //Add the first occurence to the queue
-                if(link.target.marked === 0) {
+                if(link.target.marked == 0) {
                     queue.push(link.target);
                     link.target.marked = 1;
                 }
             }
-            if(link.target.name === current.name) {
+            if(link.target.name == current.name) {
                 //check if distance is greater than current distance
                 if(link.source.distance > link.target.distance) {
                     link.source.distance = link.target.distance + 1;
@@ -564,7 +566,7 @@ function astarJS(display = true) {
                     fscore.set(link.source.name, link.target.distance+targetNode.id-current.id);
                 }
                 //Add the first occurence to the queue
-                if(link.source.marked === 0) {
+                if(link.source.marked == 0) {
                     queue.push(link.source);
                     link.source.marked = 1;
                 }
@@ -578,7 +580,7 @@ function astarJS(display = true) {
     //Reset nodes
     listOfNodes.data().forEach(function(d) {
         d.marked = 0;
-        if(d.name === target) {
+        if(d.name == target) {
             targetNode = d;
             targetNode.marked = 1;
         }
@@ -587,12 +589,12 @@ function astarJS(display = true) {
         var closerNode = targetNode;
         listOfLinks.forEach(function (link) {
             //Get the closest node
-            if(link.source === targetNode) {
+            if(link.source == targetNode) {
                 if(link.target.distance < closerNode.distance) {
                     closerNode = link.target;
                 }
             }
-            if(link.target === targetNode) {
+            if(link.target == targetNode) {
                 if(link.source.distance < closerNode.distance) {
                     closerNode = link.source;
                 }
@@ -602,7 +604,7 @@ function astarJS(display = true) {
         targetNode.marked = 1;
     }
 
-    const endTime = performance.now();
+    let endTime = performance.now();
     if(display) {
         displayMarkedNodes();                     
         nodeChecklabel.text(function(d) {
@@ -719,7 +721,7 @@ function doKcore(nodes, links, kVal) {
     }
     else {
         nodes = nodes.filter(node => !nodesToDelete.includes(node));
-        links = links.filter(link => (nodes.some(node => node.id === link.source.id) && nodes.some(node => node.id === link.target.id)));
+        links = links.filter(link => (nodes.some(node => node.id == link.source.id) && nodes.some(node => node.id == link.target.id)));
         return doKcore(nodes, links, kVal);
     }
 
