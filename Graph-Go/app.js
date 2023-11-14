@@ -256,7 +256,7 @@ function dfsJS(display = true) {
             }
         });
     }
-    const endTime = performance.now();
+    let endTime = performance.now();
     if(display) {
         displayMarkedNodes();                     
         displaySearchResults(visited);    
@@ -323,10 +323,11 @@ function bfsJS(display = true) {
         });
         queue.shift();
     }
-    const endTime = performance.now();
+    let endTime = performance.now();
     if(display) {
         displayMarkedNodes();                     
         displaySearchResults(visited);    
+        endTime = performance.now();
         document.getElementById("js-results").textContent = endTime-startTime;
     }
     return endTime-startTime;

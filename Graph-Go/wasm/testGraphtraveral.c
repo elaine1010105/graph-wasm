@@ -5,10 +5,6 @@
 #include "Graph.h"
 #include "Graphtraveral.h"
 
-void breadthFirstSearch(Graph g, int src);
-void depthFirstSearch(Graph g, int src);
-char* runBFS(char* graphToRead, int src);
-
 Graph graph;
 
 int main(void) {
@@ -76,12 +72,6 @@ int main(void) {
 		GreedySearch(g, src, target);
 		printf("\n");
 		break;
-	case 6: //Greedy
-		printf("Breadth first search starting at vertex %d: \n", src);
-        runBFS("input.txt", src);
-		printf("\n");
-		break;
-
 	default:
 		printf("error \n");
 		break;
@@ -134,7 +124,7 @@ char* runAStar(char* graphToRead, int src, int target) {
     return "completed";
 }
 
-char * runKCore(char* graphToRead, int src) {
+char* runKCore(char* graphToRead, int src) {
     if(graph == NULL) {
         graph = WASMLoadFile(graphToRead);        
         printf("created graph");

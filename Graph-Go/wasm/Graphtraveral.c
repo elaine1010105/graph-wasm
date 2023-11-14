@@ -8,7 +8,6 @@
 
 // BFS
 void breadthFirstSearch(Graph g, int src) {
-    printf("bfs called \n");
 	int num = GraphNumVertices(g);
 	int *visited = calloc(num,sizeof(int));
 	int i;
@@ -21,7 +20,6 @@ void breadthFirstSearch(Graph g, int src) {
 
 	while(!QueueIsEmpty(q)){
 		int item = QueueDequeue(q);
-		printf("%d \n", item);	
 		for(i = 0; i < num ; i++){
 			if(GraphIsAdjacent(g,item,i) && visited[i] != 1){
 				QueueEnqueue(q, i);
@@ -34,7 +32,7 @@ void breadthFirstSearch(Graph g, int src) {
 }
 
 // DFS
-void dfs(Graph g, Vertex v, int *visited);
+void dfs(Graph g, Vertex v, int num, int *visited);
 void depthFirstSearch(Graph g, int src) {
 	int num = GraphNumVertices(g);
 	int *visited = calloc(num,sizeof(int));
@@ -42,17 +40,15 @@ void depthFirstSearch(Graph g, int src) {
 	for(i = 0; i < num ; i++){
 		visited[i] = 0;
 	}
-	dfs(g,src,visited);
+	dfs(g,src, num, visited);
 	free(visited);
 }
 
-void dfs(Graph g, Vertex v, int *visited){
+void dfs(Graph g, Vertex v, int num, int *visited){
 	visited[v] = 1;
-	printf("%d \n", v);	
-	int num = GraphNumVertices(g);
 	for(int i = 0; i < num ; i++){
 		if(GraphIsAdjacent(g,i,v) && visited[i]!=1){
-			dfs(g,i,visited);
+			dfs(g,i, num, visited);
 		}
 	}
 }
