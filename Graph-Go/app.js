@@ -695,7 +695,7 @@ function kcoreJS(display = true) {
     var linksCopy = listOfLinks;
     doKcore(nodesCopy, linksCopy, 3);
 
-    const endTime = performance.now();
+    let endTime = performance.now();
     if(display) {
         document.getElementById("js-results").textContent = endTime-startTime;
     }
