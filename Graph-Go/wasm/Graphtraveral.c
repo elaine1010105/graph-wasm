@@ -8,6 +8,7 @@
 
 // BFS
 void breadthFirstSearch(Graph g, int src) {
+    printf("bfs called \n");
 	int num = GraphNumVertices(g);
 	int *visited = calloc(num,sizeof(int));
 	int i;
