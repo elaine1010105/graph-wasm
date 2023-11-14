@@ -770,8 +770,8 @@ function bfsExperiment() {
     var experimentTimeJS = 0;
     var experimentTimeWasm = 0;
     for(var i = 0; i < experimentQuantity; i++) {
-        experimentTimeWasm += bfsWASM();
-        experimentTimeJS += bfsJS();
+        experimentTimeWasm += bfsWASM(false);
+        experimentTimeJS += bfsJS(false);
     }
     document.getElementById("bfs-wasm").textContent=experimentTimeWasm/experimentQuantity +" ms";
     document.getElementById("bfs-js").textContent=experimentTimeJS/experimentQuantity +" ms";
