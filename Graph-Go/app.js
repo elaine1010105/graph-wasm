@@ -739,6 +739,7 @@ function doExperiment() {
    dfsExperiment();
    dijkastraExperiment();
    astarExperiment();
+   kcoreExperiment();
 
     // experimentTimeJS = 0;
     // experimentTimeWasm = 0;
@@ -802,4 +803,15 @@ function astarExperiment() {
    }
    document.getElementById("astar-wasm").textContent=experimentTimeWasm/1000 +"s";
    document.getElementById("astar-js").textContent=experimentTimeJS/1000 +"s";
+}
+
+function kcoreExperiment() {
+    var experimentTimeJS = 0;
+    var experimentTimeWasm = 0;
+    for(var i = 0; i < 300; i++) {
+        experimentTimeWasm += kcoreWASM(false);
+        experimentTimeJS += kcoreJS(false);
+    }
+    document.getElementById("kcore-wasm").textContent=experimentTimeWasm/1000 +"s";
+    document.getElementById("kcore-js").textContent=experimentTimeJS/1000 +"s";  
 }
