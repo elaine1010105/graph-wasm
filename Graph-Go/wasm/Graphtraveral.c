@@ -182,40 +182,57 @@ void GreedySearch(Graph g, Vertex src, Vertex target) {
 	QueueFree(q);
 }
 
-void kcore(Graph g, int k, Vertex src){
-	int num = GraphNumVertices(g);
-	int *visited = calloc(num,sizeof(int));
-	int *nodesToDelete = calloc(num,sizeof(int));
-	int i;
-	int j = 0;
-	for(i = 0; i < num ; i++){
-		visited[i] = 0;
-	}
+void doKcore(Graph g, int num, int k, int level, int* nodes) {
+	int nodesLost = 0;
+
 	Queue q = QueueNew();
-	QueueEnqueue(q, src);
-	visited[src] = 1;
+    for(int i = 0; i < num; i++) {
+        if(nodes[i] == level) {
+            QueueEnqueue(q, i);
+        }
+    }
 
 	while(!QueueIsEmpty(q)){
 		int item = QueueDequeue(q);
 		int neighborsum = 0;
-		for(i = 0; i < num ; i++){
-			if(GraphIsAdjacent(g,item,i)){
+		for(int i = 0; i < num ; i++){
+            //Check if node is adjacent and on the current or later level
+			if(GraphIsAdjacent(g,item,i) && (nodes[i] == level || nodes[i] == level + 1)){
 				neighborsum += 1;
-				if(visited[i] != 1){
-					QueueEnqueue(q, i);
-					visited[i] = 1;
-				}
-			}	
+			}
 		}
-		if(neighborsum < k){
-			nodesToDelete[j] = item;
-			j++;
+        //If node had the needed number of neighbours; raise its level
+		if(neighborsum >= k){
+            nodes[item] = level + 1;
 		}
+        //Increment nodes so we know that kcore check needs to repeat
+        else
+        {
+            nodesLost++;
+        }
 	}
-	if(j == 0){
+    //Check if no nodes were lost during last kcore search
+	if(nodesLost == 0){
 		return;
 	}
-	
-	free(visited);
-    free(nodesToDelete);
+	QueueFree(q);
+    printf("levels: %d \n", level);
+    return doKcore(g, num, k, level + 1, nodes);
+}
+
+void kcore(Graph g, int k, Vertex src){
+	int num = GraphNumVertices(g);
+
+    /*Keep track of kcore by storing the iteration each node with had the needed
+    k value up to. On later iterations, raise the k val level and only look at the
+    nodes that have the needed level.
+    */
+    int level = 1;
+	int *nodes = calloc(num,sizeof(int));
+
+	for(int i = 0; i < num ; i++){
+        nodes[i] = level;
+	}
+    doKcore(g, num, k, level, nodes);
+    free(nodes);
 }

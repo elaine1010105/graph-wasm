@@ -15,3 +15,5 @@ void AStar(Graph g, int src, int target);
 void GreedySearch(Graph g, int src, int target);
 
 void kcore(Graph g, int k, int src);
+
+void doKcore(Graph g, int num, int k, int level, int* nodes);
