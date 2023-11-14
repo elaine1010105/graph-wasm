@@ -70,9 +70,7 @@ void dijkstra(Graph g, Vertex src, Vertex target) {
 
 	while(!QueueIsEmpty(q)) {
 		int item = QueueDequeue(q);
-        printf("%d \n", item);
 		if(item == target) {
-			printf("found");
 			break;
 		}
 		for(i = 0; i < num ; i++){            
@@ -110,9 +108,7 @@ void AStar(Graph g, Vertex src, Vertex target) {
 
 	while(!QueueIsEmpty(q)) {
 		int item = QueueDequeue(q);
-		printf("%d \n", item);
 		if(item == target) {
-			printf("found");
 			break;
 		}
 		for(i = 0; i < num ; i++){
@@ -153,9 +149,7 @@ void GreedySearch(Graph g, Vertex src, Vertex target) {
 
 	while(!QueueIsEmpty(q)) {
 		int item = QueueDequeue(q);
-		printf("%d ", item);
 		if(item == target) {
-			printf("found");
 			break;
 		}
 		for(i = 0; i < num ; i++){
@@ -213,7 +207,6 @@ void doKcore(Graph g, int num, int k, int level, int* nodes) {
 		return;
 	}
 	QueueFree(q);
-    printf("levels: %d \n", level);
     return doKcore(g, num, k, level + 1, nodes);
 }
 
