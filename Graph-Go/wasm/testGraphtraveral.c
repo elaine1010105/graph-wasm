@@ -133,3 +133,14 @@ char* runAStar(char* graphToRead, int src, int target) {
     }  
     return "completed";
 }
+
+char * runKCore(char* graphToRead, int src) {
+    if(graph == NULL) {
+        graph = WASMLoadFile(graphToRead);        
+        printf("created graph");
+    } 
+    if(graph != NULL) {
+        kcore(graph, 3, src);
+    }  
+    return "completed";
+}

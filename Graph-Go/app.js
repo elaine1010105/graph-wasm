@@ -666,7 +666,12 @@ const deformedGraph = d3.select("#deformed-graph")
 .attr("width", 700)
 .attr("height", 600)
 
-function kcore(kVal) {
+function kcore() {
+    kcoreJS();
+    kcoreWASM();
+}
+
+function kcoreJS(display = true) {
 //Get this working later
 /*    const deformedNodes = deformedGraph
         .selectAll("circle")
@@ -681,29 +686,52 @@ function kcore(kVal) {
     //     .append(function(d) {return d.cloneNode(true)})
     console.log(deformedGraph.selectAll("circle"))
     */
-    //temp
+    //Start the recursive function
+    const startTime = performance.now();
+    var nodesCopy = listOfNodes.data();
+    var linksCopy = listOfLinks;
+    doKcore(nodesCopy, linksCopy, 3);
+
+    const endTime = performance.now();
+    if(display) {
+        document.getElementById("js-results").textContent = endTime-startTime;
+    }
+    return endTime-startTime;
+
+}
+//Recursive function
+function doKcore(nodes, links, kVal) {
     var nodesToDelete = [];
 
-    listOfNodes.data().forEach(function(d,i) {
-        var degree = listOfLinks.filter(function(link) {
-            return link.source.id == d.id || link.target.id == d.id
+    nodes.forEach(function(d,i) {
+        var degree = links.filter(function(link) {
+            return (link.source.id == d.id || link.target.id == d.id)
         })
-        console.log(degree);
         if(degree.length < kVal) {
             nodesToDelete.push(d)
         }
     })
-    if(nodesToDelete == []) {
-        return
+    if(nodesToDelete.length == 0) {
+        return;
     }
-    console.log(nodesToDelete)
-    var svgNodes = svg.selectAll("circle")
-        .filter(function(n) {
-            return nodesToDelete.includes(n)
-        })
-    console.log(svgNodes)
-    svgNodes.attr("fill-opacity", 0)
-        // .attr("stroke-opacity", 0.5)
+    else {
+        nodes = nodes.filter(node => !nodesToDelete.includes(node));
+        links = links.filter(link => (nodes.some(node => node.id === link.source.id) && nodes.some(node => node.id === link.target.id)));
+        return doKcore(nodes, links, kVal);
+    }
+
+}
+
+function kcoreWASM(display = true) {
+    const startTime = performance.now();
+  
+    console.log(Module.ccall('runKCore', "string", ['string', 'number'], ["Graphs/"+graphName, srcIdx]));
+
+    const endTime = performance.now();
+    if(display) {
+        document.getElementById("wasm-results").textContent = endTime-startTime;
+    }
+    return endTime-startTime;
 }
 
 function doExperiment() {

@@ -13,3 +13,5 @@ void dijkstra(Graph g, int src, int target);
 void AStar(Graph g, int src, int target);
 
 void GreedySearch(Graph g, int src, int target);
+
+void kcore(Graph g, int k, int src);
