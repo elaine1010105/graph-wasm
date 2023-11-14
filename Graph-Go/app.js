@@ -468,7 +468,7 @@ function dijkastraJS(display = true) {
         targetNode = closerNode;
         targetNode.marked = 1;
     }
-    const endTime = performance.now();
+    let endTime = performance.now();
 
     if(display) {
         displayMarkedNodes();                     
@@ -478,6 +478,7 @@ function dijkastraJS(display = true) {
             };
             return d.source.distance;
             })
+        endTime = performance.now();
         document.getElementById("js-results").textContent = endTime-startTime;
     }
     return endTime - startTime;    
@@ -610,6 +611,7 @@ function astarJS(display = true) {
             };
             return d.source.distance;
             })
+        endTime = performance.now();
         document.getElementById("js-results").textContent = endTime-startTime;
     }
     return endTime - startTime;   
