@@ -768,8 +768,8 @@ function bfsExperiment() {
         experimentTimeWasm += bfsWASM();
         experimentTimeJS += bfsJS();
     }
-    document.getElementById("bfs-wasm").textContent=experimentTimeWasm/experimentQuantity +"s";
-    document.getElementById("bfs-js").textContent=experimentTimeJS/experimentQuantity +"s";
+    document.getElementById("bfs-wasm").textContent=experimentTimeWasm/experimentQuantity +" ms";
+    document.getElementById("bfs-js").textContent=experimentTimeJS/experimentQuantity +" ms";
 }
 
 function dfsExperiment() {
@@ -780,8 +780,8 @@ function dfsExperiment() {
         experimentTimeWasm += dfsWASM(false);
         experimentTimeJS += dfsJS(false);
     }
-    document.getElementById("dfs-wasm").textContent=experimentTimeWasm/experimentQuantity +"s";
-    document.getElementById("dfs-js").textContent=experimentTimeJS/experimentQuantity +"s";
+    document.getElementById("dfs-wasm").textContent=experimentTimeWasm/experimentQuantity +" ms";
+    document.getElementById("dfs-js").textContent=experimentTimeJS/experimentQuantity +" ms";
 }
 
 function dijkastraExperiment() {
@@ -791,8 +791,8 @@ function dijkastraExperiment() {
        experimentTimeWasm += dijkastraWASM(false);
        experimentTimeJS += dijkastraJS(false);
    }
-   document.getElementById("dijkastra-wasm").textContent=experimentTimeWasm/experimentQuantity +"s";
-   document.getElementById("dijkastra-js").textContent=experimentTimeJS/experimentQuantity +"s";
+   document.getElementById("dijkastra-wasm").textContent=experimentTimeWasm/experimentQuantity +" ms";
+   document.getElementById("dijkastra-js").textContent=experimentTimeJS/experimentQuantity +" ms";
 }
 
 function astarExperiment() {
@@ -802,8 +802,8 @@ function astarExperiment() {
        experimentTimeWasm += astarWASM(false);
        experimentTimeJS += astarJS(false);
    }
-   document.getElementById("astar-wasm").textContent=experimentTimeWasm/experimentQuantity +"s";
-   document.getElementById("astar-js").textContent=experimentTimeJS/experimentQuantity +"s";
+   document.getElementById("astar-wasm").textContent=experimentTimeWasm/experimentQuantity +" ms";
+   document.getElementById("astar-js").textContent=experimentTimeJS/experimentQuantity +" ms";
 }
 
 function kcoreExperiment() {
@@ -813,6 +813,6 @@ function kcoreExperiment() {
         experimentTimeWasm += kcoreWASM(false);
         experimentTimeJS += kcoreJS(false);
     }
-    document.getElementById("kcore-wasm").textContent=experimentTimeWasm/experimentQuantity +"s";
-    document.getElementById("kcore-js").textContent=experimentTimeJS/experimentQuantity +"s";  
+    document.getElementById("kcore-wasm").textContent=experimentTimeWasm/experimentQuantity +" ms";
+    document.getElementById("kcore-js").textContent=experimentTimeJS/experimentQuantity +" ms";  
 }
